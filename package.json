@@ -4,7 +4,7 @@
   "description": "Streaming service ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon server/app.js"
   },
   "author": "loveyousomuch554@gmail.com",
   "license": "ISC",

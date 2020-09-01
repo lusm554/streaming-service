@@ -1,20 +1,32 @@
 import React, { Component } from 'react';
-import Stream from './components/Stream'
+import Stream from './components/Stream';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useRouteMatch,
-  useParams
+  Link
 } from "react-router-dom";
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <Stream />
-      </div>
+      <Router> 
+        <div className="nav">
+          <ul>
+            <li> <Link to="/">Home</Link> </li>
+            <li> <Link to="/start-stream">Start stream</Link> </li>
+          </ul>
+          
+          <Switch>
+            <Route path="/start-stream">
+              <Stream />
+            </Route>
+            <Route path="/">
+              <h1>home</h1>
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     )
   }
 }

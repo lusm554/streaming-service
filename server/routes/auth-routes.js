@@ -1,29 +1,33 @@
 const express = require('express')
 const Router = express.Router()
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const config = require('config'), 
-GOOGLE_CONSUMER_KEY = config.get('GOOGLE_CONSUMER_KEY'), 
-GOOGLE_CONSUMER_SECRET = config.get('GOOGLE_CONSUMER_SECRET');
+GOOGLE_CLIENT_ID = config.get('GOOGLE_CLIENT_ID'), 
+GOOGLE_CLIENT_SECRET = config.get('GOOGLE_CLIENT_SECRET');
 
 passport.use(new GoogleStrategy({ 
-        consumerKey: GOOGLE_CONSUMER_KEY, 
-        consumerSecret: GOOGLE_CONSUMER_SECRET, 
-        callbackURL: "http://localhost:8080/auth/google/redirect" 
+        clientID: GOOGLE_CLIENT_ID, 
+        clientSecret: GOOGLE_CLIENT_SECRET, 
+        callbackURL: "http://localhost:8080/auth/google/callback" 
     },
-    function(token, tokenSecret, profile, done) {
-      User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-    });
+    function(accessToken, refreshToken, profile, done) {
+        // User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        //     return done(err, user);
+        // });
+        // console.log(accessToken)
+        // console.log(refreshToken)
+        // console.log(profile)
+        done()
   }
 ));
 
-Router.get('/google', passport.authenticate('google', { scope: 'https://www.google.com/m8/feeds' }))
+Router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }), (req, res)=>res.send(1))
 
-Router.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/login' }),
+Router.get('/google/callback', 
+    passport.authenticate('google', { failureRedirect: 'http://localhost:8080/' }),
     function(req, res) {
-        res.redirect('http://localhost:8080/');
+        res.redirect('http://localhost:8080/auth/google');
 })
 
 module.exports = Router

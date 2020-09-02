@@ -8,6 +8,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mongoose": "^5.10.2",
     "passport-google-oauth": "^2.0.0"
   }
 }

@@ -15,17 +15,14 @@ passport.use(new GoogleStrategy({
         // User.findOrCreate({ googleId: profile.id }, function (err, user) {
         //     return done(err, user);
         // });
-        // console.log(accessToken)
-        // console.log(refreshToken)
-        // console.log(profile)
         done()
   }
 ));
 
-Router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }), (req, res)=>res.send(1))
+Router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }) )
 
-Router.get('/google/callback', 
-    passport.authenticate('google', { failureRedirect: 'http://localhost:8080/' }),
+Router.get('/google/callback', (req, res, next) => {console.log(req.query); next() },
+    passport.authenticate('google', { failureRedirect: '/' }),
     function(req, res) {
         res.redirect('http://localhost:8080/auth/google');
 })

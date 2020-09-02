@@ -6,22 +6,29 @@ const config = require('config'),
 GOOGLE_CLIENT_ID = config.get('GOOGLE_CLIENT_ID'), 
 GOOGLE_CLIENT_SECRET = config.get('GOOGLE_CLIENT_SECRET');
 
+const User = require('../models/user')
+
 passport.use(new GoogleStrategy({ 
         clientID: GOOGLE_CLIENT_ID, 
         clientSecret: GOOGLE_CLIENT_SECRET, 
         callbackURL: "http://localhost:8080/auth/google/callback" 
     },
-    function(accessToken, refreshToken, profile, done) {
-        // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        //     return done(err, user);
-        // });
-        done()
+    async function(accessToken, refreshToken, profile, done) {
+        const {id: user_id, name } = profile
+        const isUserExist = await User.exists({ user_id })
+        if(isUserExist) {
+            return done()
+        }
+
+        User.create({ user_id, name }, function (err, user) {
+            return done();
+        });
   }
 ));
 
 Router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }) )
 
-Router.get('/google/callback', (req, res, next) => {console.log(req.query); next() },
+Router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     function(req, res) {
         res.redirect('http://localhost:8080/auth/google');

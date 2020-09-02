@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Stream from './components/Stream';
+import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,7 +15,7 @@ class App extends Component {
         <div className="nav">
           <ul>
             <li> <Link to="/">Home</Link> </li>
-            <li> <Link to="/start-stream">Start stream</Link> </li>
+            <li> <Link to="/start-stream">Stream settings</Link> </li>
           </ul>
           
           <Switch>

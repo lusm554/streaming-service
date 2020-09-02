@@ -3,10 +3,14 @@ import React, { Component } from 'react';
 class Stream extends Component {
     constructor() {
         super()
-        this.clickHandler = this.clickHandler.bind(this)
+        this.startStream = this.startStream.bind(this)
+        this.stopStream = this.stopStream.bind(this)
+        this.videoRef = React.createRef()
   }
 
-    async clickHandler() {
+    async startStream() {
+        const videoRef = this.videoRef.current
+
         // options to access the screen with sound on
         const gdmOptions = {
         video: {
@@ -19,14 +23,25 @@ class Stream extends Component {
         }
         }
 
-        let mediaStream = await startCapture(gdmOptions)
-        console.log(mediaStream)
+        videoRef.srcObject = await startCapture(gdmOptions)
+    }
+
+    stopStream() {
+      const videoRef = this.videoRef.current
+      let tracks = videoRef.srcObject.getTracks()
+
+      tracks.forEach(track => track.stop());
+      videoRef.srcObject = null;
     }
 
     render() {
         return (
         <div>
-            <input type="button" onClick={this.clickHandler} value="Start stream"></input>
+            <p>
+              <input type="button" onClick={this.startStream} value="Start stream" style={{margin: 10}}></input>
+              <input type="button" onClick={this.stopStream} value="Stop stream" style={{margin: 10}}></input>
+            </p>
+            <video ref={this.videoRef} autoPlay className="video"></video>
         </div>
         )
     }

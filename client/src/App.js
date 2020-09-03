@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Stream from './components/Stream';
+import Header from './components/Header';
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 class App extends Component {
@@ -13,11 +13,7 @@ class App extends Component {
     return (
       <Router> 
         <div className="nav">
-          <ul>
-            <li> <Link to="/">Home</Link> </li>
-            <li> <Link to="/start-stream">Stream settings</Link> </li>
-          </ul>
-          
+          <Header />
           <Switch>
             <Route path="/start-stream">
               <Stream />

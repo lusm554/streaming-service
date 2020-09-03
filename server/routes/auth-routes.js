@@ -17,11 +17,14 @@ passport.use(new GoogleStrategy({
         const {id: user_id, name } = profile
         const isUserExist = await User.exists({ user_id })
         if(isUserExist) {
-            return done()
+            const user = await User.findOne({ user_id })
+            return done(null, user)
         }
 
-        User.create({ user_id, name }, function (err, user) {
-            return done();
+        const newUser = { user_id, name }
+        req.user = newUser
+        User.create(newUser, function (err, user) {
+            return done(err, newUser);
         });
   }
 ));
@@ -29,9 +32,21 @@ passport.use(new GoogleStrategy({
 Router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }) )
 
 Router.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
+    // authenticate user and set req.user
+    passport.authenticate('google', { 
+            failureRedirect: 'http://localhost:8080/auth/google', 
+            /* successRedirect: 'http://localhost:8080/' */
+        }
+    ),
     function(req, res) {
-        res.redirect('http://localhost:8080/auth/google');
+        console.log(req.user)
+        res.redirect('/')
+    }
+)
+
+Router.get('/google/login/success', (req, res) => {
+    console.log(req.user)
+    res.json(req.user)
 })
 
 module.exports = Router

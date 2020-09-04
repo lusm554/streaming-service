@@ -6,13 +6,26 @@ const path = require('path')
 const mongoose = require('mongoose')
 require('dotenv').config()
 require('../config/passport-setup')
-const session = require("express-session")
 const passport = require('passport')
+const cookieSession = require('cookie-session')
+const cookieParser = require('cookie-parser')
 
 mongoose.connect(config.get('mongoID'), { useNewUrlParser: true, useUnifiedTopology: true })
 
+app.use(
+    cookieSession({
+      name: "session",
+      keys: [config.get('SESSION_KEY')],
+      maxAge: 24 * 60 * 60 * 100
+    })
+  );
+  
+// parse cookies
+app.use(cookieParser());
+
+
 // use before passport.session()
-app.use(session({ secret: config.get('SESSION_KEY') }));
+// app.use(session({ secret: config.get('SESSION_KEY') }));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -22,12 +35,24 @@ app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
 
+function authValidation(req, res, next) {
+    if(!req.user) {
+        res.json({
+            authenticated: false,
+            message: "user has not been authenticated"
+        })
+    }
+    else {
+        next()
+    }
+}
+
 app.use('/auth', require('./routes/auth-routes'))
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '..', 'client', 'build')))
 }
 
-app.use('/*', (req, res) => res.redirect('/'))
+app.use('/*', authValidation, (req, res) => res.redirect('/'))
 
 app.listen(config.get('port'))

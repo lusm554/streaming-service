@@ -9,9 +9,15 @@ import {
 } from "react-router-dom";
 
 class App extends Component {
+
+  click() {
+    fetch('http://localhost:8080/auth/user').then(res => res.json()).then(console.log)
+  }
+
   render() {
     return (
-      <Router> 
+      <div>
+        <Router> 
         <div className="nav">
           <Header />
           <Switch>
@@ -23,7 +29,9 @@ class App extends Component {
             </Route>
           </Switch>
         </div>
-      </Router>
+        </Router>
+        <button onClick={this.click.bind(this)}>Click</button>
+      </div>
     )
   }
 }

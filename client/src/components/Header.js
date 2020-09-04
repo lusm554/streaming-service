@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 class Header extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
     login() {    
         window.location.href = 'http://localhost:8080/auth/google'
     }
@@ -11,13 +16,16 @@ class Header extends Component {
     }
 
     render() {
+        const authenticated = this.props.authenticated
         return(
-        <ul>
-            <li> <Link to="/">Home</Link> </li>
-            <li> <Link to="/start-stream">Stream settings</Link> </li>
-            <li onClick={this.login.bind(this)}> <Link to="/auth/google">Login</Link> </li>
-            <li onClick={this.logout.bind(this)}> <Link to="/auth/google">Logout</Link> </li>
-        </ul>
+            <ul>
+                <li> <Link to="/">Home</Link> </li>
+                <li> <Link to="/start-stream">Stream settings</Link> </li>
+                {authenticated ? 
+                    <li onClick={this.logout.bind(this)}> <Link to="/auth/google">Logout</Link> </li> :
+                    <li onClick={this.login.bind(this)}> <Link to="/auth/google">Login</Link> </li> 
+                }
+            </ul>
         )
     }
 }

@@ -9,9 +9,21 @@ import {
 } from "react-router-dom";
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
 
-  getUser() {
-    fetch('http://localhost:8080/auth/user').then(res => res.json()).then(console.log)
+  componentDidMount() {
+    fetch('http://localhost:8080/auth/user')  
+      .then(res => {
+        return res.status === 200 ? res.json() : new Error('failed to load user')
+      })
+      .then(user => {
+        console.log(user)
+        this.setState({user, authenticated: true})
+      })
+      .catch(err => ({err: err, authenticated: false}))
   }
 
   logout() {
@@ -23,7 +35,7 @@ class App extends Component {
       <div>
         <Router> 
         <div className="nav">
-          <Header />
+          <Header authenticated={this.state.authenticated}/>
           <Switch>
             <Route path="/start-stream">
               <Stream />
@@ -34,7 +46,6 @@ class App extends Component {
           </Switch>
         </div>
         </Router>
-        <button onClick={this.getUser.bind(this)}>Get user data</button>
       </div>
     )
   }

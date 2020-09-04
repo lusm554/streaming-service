@@ -23,5 +23,5 @@ client/yarn-debug.log*
 client/yarn-error.log*
 
 # config 
-/config
+config/default.json
 .env

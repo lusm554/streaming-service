@@ -20,7 +20,7 @@ class Stream extends Component {
             echoCancellation: true,
             noiseSuppression: true,
             sampleRate: 44100
-        }
+          }
         }
 
         videoRef.srcObject = await startCapture(gdmOptions)

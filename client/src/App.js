@@ -10,8 +10,12 @@ import {
 
 class App extends Component {
 
-  click() {
+  getUser() {
     fetch('http://localhost:8080/auth/user').then(res => res.json()).then(console.log)
+  }
+
+  logout() {
+    fetch('http://localhost:8080/auth/logout')
   }
 
   render() {
@@ -30,7 +34,7 @@ class App extends Component {
           </Switch>
         </div>
         </Router>
-        <button onClick={this.click.bind(this)}>Click</button>
+        <button onClick={this.getUser.bind(this)}>Get user data</button>
       </div>
     )
   }

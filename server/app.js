@@ -23,10 +23,6 @@ app.use(
 // parse cookies
 app.use(cookieParser());
 
-
-// use before passport.session()
-// app.use(session({ secret: config.get('SESSION_KEY') }));
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json

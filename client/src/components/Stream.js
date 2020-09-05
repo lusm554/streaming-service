@@ -41,7 +41,7 @@ class Stream extends Component {
               <input type="button" onClick={this.startStream} value="Start stream" style={{margin: 10}}></input>
               <input type="button" onClick={this.stopStream} value="Stop stream" style={{margin: 10}}></input>
             </p>
-            <video ref={this.videoRef} autoPlay className="video"></video>
+            <video ref={this.videoRef} autoPlay playsInline className="video" controls={false}></video>
         </div>
         )
     }

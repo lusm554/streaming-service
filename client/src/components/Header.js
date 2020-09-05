@@ -15,12 +15,20 @@ class Header extends Component {
         window.location.href = 'http://localhost:8080/auth/logout'
     }
 
+    isUserAuthenticated(e) {
+        const authenticated = this.props.authenticated
+        if(!authenticated) {
+            e.preventDefault()
+            alert('You need to log into your account.')
+        }
+    }
+
     render() {
         const authenticated = this.props.authenticated
         return(
             <ul>
                 <li> <Link to="/">Home</Link> </li>
-                <li> <Link to="/start-stream">Stream settings</Link> </li>
+                <li> <Link to="/start-stream" onClick={this.isUserAuthenticated.bind(this)}>Stream settings</Link> </li>
                 {authenticated ? 
                     <li onClick={this.logout.bind(this)}> <Link to="/auth/google">Logout</Link> </li> :
                     <li onClick={this.login.bind(this)}> <Link to="/auth/google">Login</Link> </li> 

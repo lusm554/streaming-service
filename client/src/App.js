@@ -7,6 +7,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import Profile from './components/Profile'
 
 class App extends Component {
   constructor(props) {
@@ -19,11 +20,14 @@ class App extends Component {
       .then(res => {
         return res.status === 200 ? res.json() : new Error('failed to load user')
       })
-      .then(user => {
-        console.log(user)
-        this.setState({user, authenticated: true})
-      })
-      .catch(err => ({err: err, authenticated: false}))
+      .then(
+        user => {
+          this.setState({ user, authenticated: true })
+      },
+        error => {
+          this.setState({ error, authenticated: false })
+        }
+      )
   }
 
   logout() {
@@ -39,6 +43,9 @@ class App extends Component {
           <Switch>
             <Route path="/start-stream">
               <Stream />
+            </Route>
+            <Route path="/channel">
+              <Profile />
             </Route>
             <Route path="/">
               <h1>home</h1>

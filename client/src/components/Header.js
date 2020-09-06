@@ -26,16 +26,18 @@ class Header extends Component {
     render() {
         const authenticated = this.props.authenticated
         return(
-            <ul>
-                <li> <Link to="/">Home</Link> </li>
-                <li> <Link to="/start-stream" onClick={this.isUserAuthenticated.bind(this)}>Stream settings</Link> </li>
-                {authenticated ? 
-                    <li onClick={this.logout.bind(this)}> <Link to="/auth/google">Logout</Link> </li> :
-                    <li onClick={this.login.bind(this)}> <Link to="/auth/google">Login</Link> </li> 
-                }
-                <li> <Link to="/channel" onClick={this.isUserAuthenticated.bind(this)} >Channel</Link> </li>
-                <li> <Link to="/stream">Browse</Link> </li>
-            </ul>
+            <p>
+                <ul>
+                    <li> <Link to="/">Home</Link> </li>
+                    <li> <Link to="/start-stream" onClick={this.isUserAuthenticated.bind(this)}>Stream settings</Link> </li>
+                    {authenticated ? 
+                        <li onClick={this.logout.bind(this)}> <Link to="/auth/google">Logout</Link> </li> :
+                        <li onClick={this.login.bind(this)}> <Link to="/auth/google">Login</Link> </li> 
+                    }
+                    <li> <Link to="/channel" onClick={this.isUserAuthenticated.bind(this)} >Channel</Link> </li>
+                    <li> <Link to="/stream">Browse</Link> </li>
+                </ul>
+            </p>
         )
     }
 }

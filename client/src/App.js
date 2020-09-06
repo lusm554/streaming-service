@@ -8,6 +8,7 @@ import {
   Route
 } from "react-router-dom";
 import Profile from './components/Profile'
+import Stream from './components/Stream';
 
 class App extends Component {
   constructor(props) {
@@ -46,6 +47,9 @@ class App extends Component {
             </Route>
             <Route path="/channel">
               <Profile />
+            </Route>
+            <Route path="/stream">
+              <Stream />
             </Route>
             <Route path="/">
               <h1>home</h1>

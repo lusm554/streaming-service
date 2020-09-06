@@ -34,6 +34,7 @@ class Header extends Component {
                     <li onClick={this.login.bind(this)}> <Link to="/auth/google">Login</Link> </li> 
                 }
                 <li> <Link to="/channel" onClick={this.isUserAuthenticated.bind(this)} >Channel</Link> </li>
+                <li> <Link to="/stream">Browse</Link> </li>
             </ul>
         )
     }

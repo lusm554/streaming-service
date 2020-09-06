@@ -51,4 +51,11 @@ if(process.env.NODE_ENV === 'production') {
 
 app.use('/*', authValidation, (req, res) => res.redirect('/'))
 
-app.listen(config.get('port'))
+/* create server for WebSocket */ 
+const http = require('http')
+const server = http.createServer(app)
+server.listen(config.get('port'))
+
+/* connect WebSocket */ 
+module.exports = server
+require('./routes/SocketStream')

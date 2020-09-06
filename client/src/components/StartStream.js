@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Stream extends Component {
+class StartStream extends Component {
     constructor() {
         super()
         this.startStream = this.startStream.bind(this)
@@ -65,4 +65,4 @@ async function startCapture(displayMediaOptions) {
     return captureStream
 }
 
-export default Stream
+export default StartStream

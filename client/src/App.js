@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Stream from './components/Stream';
+import StartStream from './components/StartStream';
 import Header from './components/Header';
 import './App.css';
 import {
@@ -42,7 +42,7 @@ class App extends Component {
           <Header authenticated={this.state.authenticated}/>
           <Switch>
             <Route path="/start-stream">
-              <Stream />
+              <StartStream />
             </Route>
             <Route path="/channel">
               <Profile />

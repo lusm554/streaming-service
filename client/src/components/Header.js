@@ -26,7 +26,7 @@ class Header extends Component {
     render() {
         const authenticated = this.props.authenticated
         return(
-            <p>
+            <div>
                 <ul>
                     <li> <Link to="/">Home</Link> </li>
                     <li> <Link to="/start-stream" onClick={this.isUserAuthenticated.bind(this)}>Stream settings</Link> </li>
@@ -37,7 +37,7 @@ class Header extends Component {
                     <li> <Link to="/channel" onClick={this.isUserAuthenticated.bind(this)} >Channel</Link> </li>
                     <li> <Link to="/stream">Browse</Link> </li>
                 </ul>
-            </p>
+            </div>
         )
     }
 }

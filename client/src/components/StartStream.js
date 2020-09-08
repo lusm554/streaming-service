@@ -35,25 +35,9 @@ class StartStream extends Component {
     }
 }
 
-async function startCapture(displayMediaOptions) {
-    let captureStream = null
-  
-    try {
-      captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
-    } catch(err) {
-      const isBrowserCannotStream = err.stack && err.stack.includes('getDisplayMedia') 
-  
-      if(isBrowserCannotStream) {
-        alert('You cannot stream with this browser')
-      }
-      else {
-        console.log(err)
-      }
-    }
-    return captureStream
-}
-
-let ws = null;
+let ws = null
+let currentPeerConnection = null
+let mediaStream = null
 
 // connect WebSocket
 connect()
@@ -72,12 +56,12 @@ const gdmOptions = {
 
 function log(...text) {
   let time = new Date()
-
   console.log(`[${time.toLocaleTimeString()}]`, ...text)
 }
 
-function connect() {
-  ws = new WebSocket('ws://localhost:8080/')
+function log_error(...text) {
+  let time = new Date()
+  console.log(`[${time.toLocaleTimeString()}]`, ...text)
 }
 
 function sendToServer(msg) {
@@ -85,6 +69,10 @@ function sendToServer(msg) {
 
   log('Sending:', msg)
   ws.send(msgJSON)
+}
+
+function connect() {
+  ws = new WebSocket('ws://localhost:8080/')
 }
 
 ws.addEventListener('open', (e) => {
@@ -95,6 +83,24 @@ ws.addEventListener('message', (e) => {
   let msg = JSON.parse(e.data)
   log('Received:', msg)
 })
+
+async function startCapture(displayMediaOptions) {
+  let captureStream = null
+
+  try {
+    captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
+  } catch(err) {
+    const isBrowserCannotStream = err.stack && err.stack.includes('getDisplayMedia') 
+
+    if(isBrowserCannotStream) {
+      alert('You cannot stream with this browser')
+    }
+    else {
+      console.log(err)
+    }
+  }
+  return captureStream
+}
 
 let i = setInterval(() => {
   let stage = ws.readyState

@@ -53,6 +53,11 @@ async function startCapture(displayMediaOptions) {
     return captureStream
 }
 
+let ws = null;
+
+// connect WebSocket
+connect()
+
 // options to access the screen with sound on
 const gdmOptions = {
   video: {
@@ -65,10 +70,38 @@ const gdmOptions = {
   }
 }
 
-const ws = new WebSocket('ws://localhost:8080')
+function log(...text) {
+  let time = new Date()
+
+  console.log(`[${time.toLocaleTimeString()}]`, ...text)
+}
+
+function connect() {
+  ws = new WebSocket('ws://localhost:8080/')
+}
+
+function sendToServer(msg) {
+  let msgJSON = JSON.stringify(msg)
+
+  log('Sending:', msg)
+  ws.send(msgJSON)
+}
 
 ws.addEventListener('open', (e) => {
-  console.log(e)
+  log(e)
 })
+
+ws.addEventListener('message', (e) => {
+  let msg = JSON.parse(e.data)
+  log('Received:', msg)
+})
+
+let i = setInterval(() => {
+  let stage = ws.readyState
+  if(stage === 1) {
+    sendToServer({name: 'ya'})
+    clearInterval(i)
+  }
+}, 100)
 
 export default StartStream

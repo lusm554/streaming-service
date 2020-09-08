@@ -49,7 +49,7 @@ if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '..', 'client', 'build')))
 }
 
-app.use('/*', authValidation, (req, res) => res.redirect('/'))
+app.use('/*', (req, res) => res.redirect('/'))
 
 /* create server for WebSocket */ 
 const http = require('http')

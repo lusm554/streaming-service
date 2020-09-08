@@ -11,18 +11,6 @@ class StartStream extends Component {
     async startStream() {
         const videoRef = this.videoRef.current
 
-        // options to access the screen with sound on
-        const gdmOptions = {
-        video: {
-            cursor: "always"
-        },
-        audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            sampleRate: 44100
-          }
-        }
-
         videoRef.srcObject = await startCapture(gdmOptions)
     }
 
@@ -63,6 +51,18 @@ async function startCapture(displayMediaOptions) {
       }
     }
     return captureStream
+}
+
+// options to access the screen with sound on
+const gdmOptions = {
+  video: {
+    cursor: "always"
+  },
+  audio: {
+    echoCancellation: true,
+    noiseSuppression: true,
+    sampleRate: 44100
+  }
 }
 
 export default StartStream

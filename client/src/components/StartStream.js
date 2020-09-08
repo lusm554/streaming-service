@@ -3,19 +3,14 @@ import React, { Component } from 'react';
 class StartStream extends Component {
   constructor() {
     super()
-      this.startStream = this.startStream.bind(this)
       this.videoRef = React.createRef()
-  }
-
-  async startStream(videoRef) {
-    videoRef.srcObject = await startCapture(gdmOptions)
   }
 
   render() {
     return (
       <div>
         <p>
-          <input type="button" onClick={() => this.startStream(this.videoRef.current)} value="Start stream" style={{margin: 10}}></input>
+          <input type="button" onClick={() => startStream(this.videoRef.current)} value="Start stream" style={{margin: 10}}></input>
           <input type="button" onClick={() => stopStream(this.videoRef.current)} value="Stop stream" style={{margin: 10}}></input>
         </p>
         <video ref={this.videoRef} autoPlay playsInline className="video" controls={false}></video>
@@ -32,7 +27,7 @@ let mediaStream = null
 connect()
 
 // options to access the screen with sound on
-const gdmOptions = {
+const displayMediaOptions = {
   video: {
     cursor: "always"
   },
@@ -77,10 +72,15 @@ function connect() {
   })
 }
 
-async function startCapture(displayMediaOptions) {
+async function startStream(videoRef) {
   try {
+    // log('Creating peer connection...')
+    // createPeerConnection()
+
     log('Getting media stream...')
     mediaStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
+    log('Media stream:', mediaStream)
+    videoRef.srcObject = mediaStream
   } catch(err) {
     const isBrowserCannotStream = err.stack && err.stack.includes('getDisplayMedia') 
 
@@ -92,13 +92,13 @@ async function startCapture(displayMediaOptions) {
       log_error(err)
     }
   }
-  return mediaStream
 }
 
 function stopStream(videoRef) {
   let tracks = videoRef.srcObject.getTracks()
 
   tracks.forEach(track => track.stop());
+  log('Stream stopped...')
   videoRef.srcObject = null;
 }
 

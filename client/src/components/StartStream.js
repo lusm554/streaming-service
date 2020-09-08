@@ -65,4 +65,10 @@ const gdmOptions = {
   }
 }
 
+const ws = new WebSocket('ws://localhost:8080')
+
+ws.addEventListener('open', (e) => {
+  console.log(e)
+})
+
 export default StartStream

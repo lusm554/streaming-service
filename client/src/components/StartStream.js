@@ -43,9 +43,14 @@ function log(...text) {
   console.log(`[${time.toLocaleTimeString()}]`, ...text)
 }
 
-function log_error(...text) {
+function log_error(errObj) {
   let time = new Date()
-  console.log(`[${time.toLocaleTimeString()}]`, ...text)
+  let { error, text } = errObj
+
+  // checking text for an array
+  Array.isArray(text) ? 
+    console.log(`[${time.toLocaleTimeString()}]`, ...text, error) :
+    console.log(`[${time.toLocaleTimeString()}]`, text, error)
 }
 
 function sendToServer(msg) {
@@ -56,16 +61,22 @@ function sendToServer(msg) {
 }
 
 function connect() {
-  ws = new WebSocket('ws://localhost:8080/')
+  ws = new WebSocket('ws://localhost:8089/')
 
   ws.addEventListener('open', (e) => {
     log(e)
   })
 
-  ws.addEventListener('error', (e) => {
-    log_error(e)
+  ws.addEventListener('error', (error) => {
+    log_error({ error, text: 'WebSocket Error' })
   })
   
+  ws.addEventListener('close', (e) => {
+    if(!e.wasClean) {
+      log_error({ error: `Code ${e.code}`, text: 'Connection closed' })
+    }
+  })
+
   ws.addEventListener('message', (e) => {
     let msg = JSON.parse(e.data)
     log('Received:', msg)
@@ -81,15 +92,15 @@ async function startStream(videoRef) {
     mediaStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
     log('Media stream:', mediaStream)
     videoRef.srcObject = mediaStream
-  } catch(err) {
-    const isBrowserCannotStream = err.stack && err.stack.includes('getDisplayMedia') 
+  } catch(error) {
+    const isBrowserCannotStream = error.stack && error.stack.includes('getDisplayMedia') 
 
     if(isBrowserCannotStream) {
       alert('You cannot stream with this browser')
-      log_error('You cannot stream in this browser:', err)
+      log_error({ text: 'You cannot stream in this browser:', error })
     }
     else {
-      log_error(err)
+      log_error({ error })
     }
   }
 }
@@ -102,6 +113,7 @@ function stopStream(videoRef) {
   videoRef.srcObject = null;
 }
 
+// test ws connection
 let i = setInterval(() => {
   let stage = ws.readyState
   if(stage === 1) {

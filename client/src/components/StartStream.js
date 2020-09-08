@@ -62,16 +62,20 @@ function sendToServer(msg) {
 
 function connect() {
   ws = new WebSocket('ws://localhost:8080/')
+
+  ws.addEventListener('open', (e) => {
+    log(e)
+  })
+
+  ws.addEventListener('error', (e) => {
+    log_error(e)
+  })
+  
+  ws.addEventListener('message', (e) => {
+    let msg = JSON.parse(e.data)
+    log('Received:', msg)
+  })
 }
-
-ws.addEventListener('open', (e) => {
-  log(e)
-})
-
-ws.addEventListener('message', (e) => {
-  let msg = JSON.parse(e.data)
-  log('Received:', msg)
-})
 
 async function startCapture(displayMediaOptions) {
   try {

@@ -23,10 +23,11 @@ let ws = null
 let currentPeerConnection = null
 let mediaStream = null
 
-// connect WebSocket
+// Connect WebSocket.
 connect()
 
-// options to access the screen with sound on
+// Options to access the screen with sound on.
+
 const displayMediaOptions = {
   video: {
     cursor: "always"
@@ -38,20 +39,28 @@ const displayMediaOptions = {
   }
 }
 
+// Outputting information to the console.
+
 function log(...text) {
   let time = new Date()
   console.log(`[${time.toLocaleTimeString()}]`, ...text)
 }
 
+// Outputting error message to the console.
+
 function log_error(errObj) {
   let time = new Date()
   let { error, text } = errObj
 
-  // checking text for an array
+  // Checking text for an array.
+
   Array.isArray(text) ? 
     console.log(`[${time.toLocaleTimeString()}]`, ...text, error) :
     console.log(`[${time.toLocaleTimeString()}]`, text, error)
 }
+
+// Send an object by converting it to JSON and sending 
+// it as a message to the WebSocket.
 
 function sendToServer(msg) {
   let msgJSON = JSON.stringify(msg)
@@ -64,7 +73,7 @@ function connect() {
   ws = new WebSocket('ws://localhost:8080/')
 
   ws.addEventListener('open', (e) => {
-    log(e)
+    log('Connection open', e)
   })
 
   ws.addEventListener('error', (error) => {
@@ -75,6 +84,7 @@ function connect() {
     if(!e.wasClean) {
       log_error({ error: `Code ${e.code}`, text: 'Connection closed' })
     }
+    log('Connection close', e)
   })
 
   ws.addEventListener('message', (e) => {
@@ -110,7 +120,8 @@ function stopStream(videoRef) {
 
   log('Closing the stream...')
 
-  // stop stream 
+  // Stop stream and clear variables.
+
   tracks.forEach(track => track.stop())
   currentPeerConnection = null 
   videoRef.srcObject = null
@@ -118,7 +129,8 @@ function stopStream(videoRef) {
   log('Stream closed.')
 }
 
-// test ws connection
+// Test ws connection.
+
 let i = setInterval(() => {
   let stage = ws.readyState
   if(stage === 1) {

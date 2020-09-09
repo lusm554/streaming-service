@@ -102,10 +102,17 @@ async function createPeerConnection() {
 }
 
 async function startStream(videoRef) {
-  try {
-    // log('Creating peer connection...')
-    // createPeerConnection()
+  if(currentPeerConnection) {
+    alert('You cannot start stream because you already have one open')
+  }
+  else {
+    // Call createPeerConnection() to create the RTCPeerConnection.
 
+    log('Creating peer connection...')
+    createPeerConnection()
+  }
+
+  try {
     log('Getting media stream...')
     mediaStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
     log('Media stream:', mediaStream)
@@ -119,6 +126,19 @@ async function startStream(videoRef) {
     }
     else {
       log_error({ error })
+    }
+
+    // Add tracks from the stream to the RTCPeerConnection.
+    // Define a list of MediaStream objects to add to the transceivers RTCRtpReceiver;
+    // when the remote peer's RTCPeerConnections track occurs, these are the streams
+    // that will be specified by that event.
+
+    try {
+      mediaStream.getTracks().forEach(track => {
+        currentPeerConnection.addTransceiver(track, { streams: [mediaStream] })
+      })
+    } catch (error) {
+      log_error({ error, text: 'Error with add tracks to the RTCPeerConnection:' })
     }
   }
 }

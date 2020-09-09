@@ -127,6 +127,8 @@ function stopStream(videoRef) {
   videoRef.srcObject = null
   mediaStream = null 
   log('Stream closed.')
+
+  // Stop and close peer connection will be here...
 }
 
 // Test ws connection.

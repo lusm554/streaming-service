@@ -93,6 +93,10 @@ function connect() {
   })
 }
 
+async function createPeerConnection() {
+  log('Setting up connection...')
+}
+
 async function startStream(videoRef) {
   try {
     // log('Creating peer connection...')

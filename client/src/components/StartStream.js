@@ -95,6 +95,10 @@ function connect() {
 
 async function createPeerConnection() {
   log('Setting up connection...')
+
+  // Create an RTCPeerConnection 
+
+  currentPeerConnection = new RTCPeerConnection(/* { options } */)
 }
 
 async function startStream(videoRef) {

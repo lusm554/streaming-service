@@ -61,7 +61,7 @@ function sendToServer(msg) {
 }
 
 function connect() {
-  ws = new WebSocket('ws://localhost:8089/')
+  ws = new WebSocket('ws://localhost:8080/')
 
   ws.addEventListener('open', (e) => {
     log(e)
@@ -108,9 +108,14 @@ async function startStream(videoRef) {
 function stopStream(videoRef) {
   let tracks = videoRef.srcObject.getTracks()
 
-  tracks.forEach(track => track.stop());
-  log('Stream stopped...')
-  videoRef.srcObject = null;
+  log('Closing the stream...')
+
+  // stop stream 
+  tracks.forEach(track => track.stop())
+  currentPeerConnection = null 
+  videoRef.srcObject = null
+  mediaStream = null 
+  log('Stream closed.')
 }
 
 // test ws connection

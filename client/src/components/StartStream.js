@@ -99,6 +99,44 @@ async function createPeerConnection() {
   // Create an RTCPeerConnection 
 
   currentPeerConnection = new RTCPeerConnection(/* { options } */)
+
+  // Set up event handlers for the ICE negotiation process.
+  currentPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent
+}
+
+async function handleNegotiationNeededEvent() {
+  log('>>> Start of negotiations')
+
+  try {
+    log('>>> Creating offer')
+    // Create SDP offer
+    const offer = await currentPeerConnection.createOffer()
+
+    // Check for connection state, if the connection hasn't yet achieved the 'stable'
+    // state, return to the caller.
+
+    if(currentPeerConnection.signalingState != 'stable') {
+      log('The connection isn\'t stable yet')
+      return;
+    }
+
+    // Establish the offer as the local peer's current
+    // description.
+    log('>>> Setting local description to the offer')
+    await currentPeerConnection.setLocalDescription(offer)
+
+    // Send the offer to the remote peer.
+    log('>>> Sending the offer to the remote peer')
+    sendToServer({
+      type: 'video-offer',
+      sdp: currentPeerConnection.localDescription
+    })
+  } catch (error) {
+    log_error({ 
+      error, 
+      text: '>>> The following error occurred while handling the negotiationneeded event:' 
+    })
+  }
 }
 
 async function startStream(videoRef) {

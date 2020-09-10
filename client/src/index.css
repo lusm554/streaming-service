@@ -12,3 +12,9 @@
     transform: translateX(-50%);
     margin-top: 50px;
 }
+
+.play_button {
+    position: absolute;
+    top: 45%;
+    left: 10px;
+}

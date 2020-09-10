@@ -12,8 +12,8 @@ const cookieParser = require('cookie-parser')
 
 mongoose.connect(config.get('mongoID'), { useNewUrlParser: true, useUnifiedTopology: true })
 
-// Signaling stream 
-app.use(require('./routes/SocketStream'))
+const cors = require('cors')
+app.use(cors())
 
 app.use(
     cookieSession({

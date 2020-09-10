@@ -4,12 +4,13 @@ class Stream extends Component {
     constructor(props) {
         super(props) 
         this.state = {}
+        this.streamRef = React.createRef()
     }
 
     render() {
         return (
             <div>
-                hi
+                <video re={this.streamRef} autoPlay playsInline className="video"></video>
             </div>
         )
     }
@@ -48,7 +49,8 @@ function connect() {
 
     ws.addEventListener('message', (e) => {
         let msg = JSON.parse(e.data)
-        handleVideoOfferMsg(msg)
+        // handleVideoOfferMsg(msg)
+        console.log(msg)
     })
 }
 

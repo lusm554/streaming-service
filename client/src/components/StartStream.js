@@ -139,6 +139,17 @@ async function handleNegotiationNeededEvent() {
   }
 }
 
+function handleICECandidateEvent(e) {
+  if(event.candidate) {
+    log('ICE candidate', e.candidate.candidate) 
+
+    sendToServer({
+      type: 'new-ice-candidate',
+      candidate: e.candidate
+    })
+  }
+}
+
 async function startStream(videoRef) {
   if(currentPeerConnection) {
     alert('You cannot start stream because you already have one open')

@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
 
+let ref = null
+
 class Stream extends Component {
     constructor(props) {
         super(props) 
-        this.state = {}
+        this.state = {ref: null}
         this.streamRef = React.createRef()
+    }
+
+    componentDidMount() {
+        // Set streamRef to global variable 
+        ref = this.streamRef
     }
 
     render() {
         return (
             <div>
-                <video re={this.streamRef} autoPlay playsInline className="streamVideo"></video>
+                <video ref={this.streamRef} autoPlay playsInline className="streamVideo" id="video"></video>
+                <button className="play_button">Play</button>
             </div>
         )
     }
@@ -18,6 +26,7 @@ class Stream extends Component {
 
 let ws = null 
 let currentPeerConnection = null
+let remoteSteam = null
 
 async function handleVideoOfferMsg(msg) {
     
@@ -29,12 +38,19 @@ async function handleVideoOfferMsg(msg) {
     // Set the remote description to the received SDP offer.
     let desc = new RTCSessionDescription(msg.sdp)
 
-    /* Check for stable stage of the connection. */
-
-    // Setting remote description.
-    await currentPeerConnection.setRemoteDescription(desc)
-
-    /* Get stream */
+    // If the connection isn't stable we need to wait.
+    
+    if(currentPeerConnection.signalingState !== 'stable') {
+        await Promise.all([
+            currentPeerConnection.setLocalDescription({ type: 'rollback' }),
+            currentPeerConnection.setRemoteDescription(desc)
+        ])
+        return;
+    }
+    else {
+        // Setting remote description.
+        await currentPeerConnection.setRemoteDescription(desc)
+    }
 }
 
 connect()

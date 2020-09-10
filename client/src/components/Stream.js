@@ -10,7 +10,7 @@ class Stream extends Component {
     render() {
         return (
             <div>
-                <video re={this.streamRef} autoPlay playsInline className="video"></video>
+                <video re={this.streamRef} autoPlay playsInline className="streamVideo"></video>
             </div>
         )
     }

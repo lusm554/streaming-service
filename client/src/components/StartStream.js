@@ -115,7 +115,7 @@ async function handleNegotiationNeededEvent() {
     // Check for connection state, if the connection hasn't yet achieved the 'stable'
     // state, return to the caller.
 
-    if(currentPeerConnection.signalingState != 'stable') {
+    if(currentPeerConnection.signalingState !== 'stable') {
       log('The connection isn\'t stable yet')
       return;
     }
@@ -198,7 +198,6 @@ function stopStream(videoRef) {
 }
 
 // Test ws connection.
-
 let i = setInterval(() => {
   let stage = ws.readyState
   if(stage === 1) {

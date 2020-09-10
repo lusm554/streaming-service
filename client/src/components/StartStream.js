@@ -140,7 +140,7 @@ async function handleNegotiationNeededEvent() {
 }
 
 function handleICECandidateEvent(e) {
-  if(event.candidate) {
+  if(e.candidate) {
     log('ICE candidate', e.candidate.candidate) 
 
     sendToServer({

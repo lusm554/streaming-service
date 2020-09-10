@@ -19,7 +19,21 @@ let ws = null
 let currentPeerConnection = null
 
 async function handleVideoOfferMsg(msg) {
-    console.log(msg)
+    
+    // If we are not already connected, create an RTCPeerConnection.
+    if(!currentPeerConnection) {
+        createPeerConnection()
+    }
+    
+    // Set the remote description to the received SDP offer.
+    let desc = new RTCSessionDescription(msg.sdp)
+
+    /* Check for stable stage of the connection. */
+
+    // Setting remote description.
+    await currentPeerConnection.setRemoteDescription(desc)
+
+    /* Get stream */
 }
 
 connect()

@@ -16,6 +16,7 @@ class Stream extends Component {
 }
 
 let ws = null 
+let currentPeerConnection = null
 
 async function handleVideoOfferMsg(msg) {
     console.log(msg)
@@ -35,6 +36,11 @@ function connect() {
         let msg = JSON.parse(e.data)
         handleVideoOfferMsg(msg)
     })
+}
+
+function createPeerConnection() {
+    currentPeerConnection = new RTCPeerConnection({/* options */})
+    /* Event handlers here */
 }
 
 export default Stream

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { log, log_error } from '../log_info';
+import { log, log_error, sendToServer } from '../log_info';
 
 class StartStream extends Component {
   constructor() {
@@ -37,16 +37,6 @@ const displayMediaOptions = {
     noiseSuppression: true,
     sampleRate: 44100
   }
-}
-
-// Send an object by converting it to JSON and sending 
-// it as a message to the WebSocket.
-
-function sendToServer(msg) {
-  let msgJSON = JSON.stringify(msg)
-
-  log('Sending:', msg)
-  ws.send(msgJSON)
 }
 
 function connect() {
@@ -133,7 +123,7 @@ async function handleNegotiationNeededEvent() {
     sendToServer({
       type: 'video-offer',
       sdp: currentPeerConnection.localDescription
-    })
+    }, ws)
   } catch (error) {
     log_error({ 
       error, 
@@ -149,7 +139,7 @@ function handleICECandidateEvent(e) {
     sendToServer({
       type: 'new-ice-candidate',
       candidate: e.candidate
-    })
+    }, ws)
   }
 }
 
@@ -221,7 +211,7 @@ function stopStream(videoRef) {
 let i = setInterval(() => {
   let stage = ws.readyState
   if(stage === 1) {
-    sendToServer({name: 'ya', type: 'message'})
+    sendToServer({name: 'ya', type: 'message'}, ws)
     clearInterval(i)
   }
 }, 100)

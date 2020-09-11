@@ -14,3 +14,12 @@ export function log_error(errObj) {
       console.error(`[${time.toLocaleTimeString()}]`, ...text, error) :
       console.error(`[${time.toLocaleTimeString()}]`, text, error)
 }
+
+// Send an object by converting it to JSON and sending 
+// it as a message to the WebSocket.
+export function sendToServer(msg, ws) {
+    let msgJSON = JSON.stringify(msg)
+  
+    log('Sending:', msg)
+    ws.send(msgJSON)
+}

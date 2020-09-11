@@ -27,7 +27,6 @@ let mediaStream = null
 connect()
 
 // Options to access the screen with sound on.
-
 const displayMediaOptions = {
   video: {
     cursor: "always"
@@ -111,15 +110,14 @@ async function handleNewICECandidateMsg(msg) {
   try {
     await currentPeerConnection.addIceCandidate(candidate)
   } catch (error) {
-    log_error({ error, text: 'Problem with new ICE candidate'})
+    log_error({ error, text: 'Problem with new ICE candidate' })
   }
 }
 
-async function createPeerConnection() {
+function createPeerConnection() {
   log('Setting up connection...')
 
   // Create an RTCPeerConnection 
-
   currentPeerConnection = new RTCPeerConnection(/* { options } */)
 
   // Set up event handlers for the ICE negotiation process.
@@ -185,8 +183,8 @@ async function startStream(videoRef) {
     alert('You cannot start stream because you already have one open')
     return;
   }
-  // Call createPeerConnection() to create the RTCPeerConnection.
 
+  // Call createPeerConnection() to create the RTCPeerConnection.
   log('Creating peer connection...')
   createPeerConnection()
 
@@ -205,19 +203,19 @@ async function startStream(videoRef) {
     else {
       log_error({ error })
     }
+  }
 
-    // Add tracks from the stream to the RTCPeerConnection.
-    // Define a list of MediaStream objects to add to the transceivers RTCRtpReceiver;
-    // when the remote peer's RTCPeerConnections track occurs, these are the streams
-    // that will be specified by that event.
+  // Add tracks from the stream to the RTCPeerConnection.
+  // Define a list of MediaStream objects to add to the transceivers RTCRtpReceiver;
+  // when the remote peer's RTCPeerConnections track occurs, these are the streams
+  // that will be specified by that event.
 
-    try {
-      mediaStream.getTracks().forEach(track => {
-        currentPeerConnection.addTransceiver(track, { streams: [mediaStream] })
-      })
-    } catch (error) {
-      log_error({ error, text: 'Error with add tracks to the RTCPeerConnection:' })
-    }
+  try {
+    mediaStream.getTracks().forEach(track => {
+      currentPeerConnection.addTransceiver(track, { streams: [mediaStream] })
+    })
+  } catch (error) {
+    log_error({ error, text: 'Error with add tracks to the RTCPeerConnection:' })
   }
 }
 
@@ -227,7 +225,6 @@ function stopStream(videoRef) {
   log('Closing the stream...')
 
   // Stop stream and clear variables.
-
   tracks.forEach(track => track.stop())
   currentPeerConnection = null 
   videoRef.srcObject = null

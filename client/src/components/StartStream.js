@@ -183,6 +183,7 @@ function handleICEConnectionStateChangeEvent(e) {
 async function startStream(videoRef) {
   if(currentPeerConnection) {
     alert('You cannot start stream because you already have one open')
+    return;
   }
   else {
     // Call createPeerConnection() to create the RTCPeerConnection.

@@ -53,10 +53,9 @@ function log_error(errObj) {
   let { error, text } = errObj
 
   // Checking text for an array.
-
   Array.isArray(text) ? 
-    console.log(`[${time.toLocaleTimeString()}]`, ...text, error) :
-    console.log(`[${time.toLocaleTimeString()}]`, text, error)
+    console.error(`[${time.toLocaleTimeString()}]`, ...text, error) :
+    console.error(`[${time.toLocaleTimeString()}]`, text, error)
 }
 
 // Send an object by converting it to JSON and sending 
@@ -88,7 +87,7 @@ function connect() {
   })
 
   ws.addEventListener('message', (e) => {
-    let msg = JSON.parse(e.data)
+    let msg = JSON.parse(e.data), { type } = msg
     log('Received:', msg)
   })
 }
@@ -220,7 +219,7 @@ function stopStream(videoRef) {
 let i = setInterval(() => {
   let stage = ws.readyState
   if(stage === 1) {
-    sendToServer({name: 'ya'})
+    sendToServer({name: 'ya', type: 'message'})
     clearInterval(i)
   }
 }, 100)

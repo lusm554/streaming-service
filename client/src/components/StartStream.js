@@ -150,6 +150,14 @@ function handleICECandidateEvent(e) {
   }
 }
 
+function handleICEConnectionStateChangeEvent(e) {
+  log('ICE connection stage changed to:', currentPeerConnection.iceConnectionState)
+
+  if(currentPeerConnection.iceConnectionState === 'disconnected') {
+    log('ICE connection disconnected')
+  }
+}
+
 async function startStream(videoRef) {
   if(currentPeerConnection) {
     alert('You cannot start stream because you already have one open')

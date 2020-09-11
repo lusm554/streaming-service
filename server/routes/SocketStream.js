@@ -6,7 +6,7 @@ wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
         let clientObj = JSON.parse(message)
         console.log(message)
-        sendToClient(ws, message)
+        sendToClient(ws, clientObj)
     });
    
 });

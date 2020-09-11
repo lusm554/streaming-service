@@ -122,6 +122,7 @@ function createPeerConnection() {
 
   // Set up event handlers for the ICE negotiation process.
   currentPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent
+  currentPeerConnection.onicecandidate = handleICECandidateEvent
 }
 
 async function handleNegotiationNeededEvent() {

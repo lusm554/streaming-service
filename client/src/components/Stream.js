@@ -1,24 +1,19 @@
 import React, { Component } from 'react'
+import { log, log_error } from '../log_info'
 
 let ref = null
 
 class Stream extends Component {
     constructor(props) {
         super(props) 
-        this.state = {ref: null}
         this.streamRef = React.createRef()
-    }
-
-    componentDidMount() {
-        // Set streamRef to global variable 
-        ref = this.streamRef
     }
 
     render() {
         return (
             <div>
                 <video ref={this.streamRef} autoPlay playsInline className="streamVideo" id="video"></video>
-                <button className="play_button">Play</button>
+                <button className="play_button" onClick={() => addVideo(this.streamRef)}>Play</button>
             </div>
         )
     }
@@ -27,31 +22,7 @@ class Stream extends Component {
 let ws = null 
 let currentPeerConnection = null
 let remoteSteam = null
-
-async function handleVideoOfferMsg(msg) {
-    
-    // If we are not already connected, create an RTCPeerConnection.
-    if(!currentPeerConnection) {
-        createPeerConnection()
-    }
-    
-    // Set the remote description to the received SDP offer.
-    let desc = new RTCSessionDescription(msg.sdp)
-
-    // If the connection isn't stable we need to wait.
-    
-    if(currentPeerConnection.signalingState !== 'stable') {
-        await Promise.all([
-            currentPeerConnection.setLocalDescription({ type: 'rollback' }),
-            currentPeerConnection.setRemoteDescription(desc)
-        ])
-        return;
-    }
-    else {
-        // Setting remote description.
-        await currentPeerConnection.setRemoteDescription(desc)
-    }
-}
+let stream = null
 
 connect()
 
@@ -64,15 +35,49 @@ function connect() {
     })
 
     ws.addEventListener('message', (e) => {
-        let msg = JSON.parse(e.data)
-        // handleVideoOfferMsg(msg)
-        console.log(msg)
+        let msg = JSON.parse(e.data), { type } = msg
+        switch (type) {
+            case 'video-offer':
+                handleVideoOfferMsg(msg)
+                break;
+            
+            case 'message':
+                log(msg)
+                break;
+            default:
+                break;
+        }
     })
 }
 
-function createPeerConnection() {
-    currentPeerConnection = new RTCPeerConnection({/* options */})
-    /* Event handlers here */
+async function handleVideoOfferMsg(msg) {
+
+    if(!currentPeerConnection) {
+        createPeerConnection()
+    }
+
+    // Set the remote description to the received SDP offer.
+    let desc = new RTCSessionDescription(msg.sdp)
+
+    // Setting remote description.
+    await currentPeerConnection.setRemoteDescription(desc)
+}//received_video
+
+async function createPeerConnection() {
+    log('Setting up a connection...')
+
+    currentPeerConnection = new RTCPeerConnection(/*{ options }*/)
+
+    currentPeerConnection.ontrack = handleTrackEvent
+}
+
+function handleTrackEvent(event) {
+    log('>>> Track event')  
+    stream = event.streams[0]
+}
+
+function addVideo(streamRef) {
+    streamRef.srcObject = stream
 }
 
 export default Stream

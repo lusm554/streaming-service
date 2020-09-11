@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import StartStream from './components/StartStream';
+import React, { Component, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import './App.css';
 import {
@@ -7,8 +6,11 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import Profile from './components/Profile'
-import Stream from './components/Stream';
+
+// pages
+const StartStream = lazy(() => import('./components/StartStream'))
+const Profile = lazy(() => import('./components/Profile'))
+const Stream = lazy(() => import('./components/Stream'))
 
 class App extends Component {
   constructor(props) {
@@ -37,27 +39,21 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <Suspense fallback={<div>Page loading...</div>}>
         <Router> 
         <div className="nav">
           <Header authenticated={this.state.authenticated}/>
           <Switch>
-            <Route path="/start-stream">
-              <StartStream />
-            </Route>
-            <Route path="/channel">
-              <Profile />
-            </Route>
-            <Route path="/stream">
-              <Stream />
-            </Route>
+            <Route path="/start-stream" component={ StartStream } />
+            <Route path="/channel" component={ Profile } />
+            <Route path="/stream" component={ Stream } />
             <Route path="/">
               <h1>home</h1>
             </Route>
           </Switch>
         </div>
         </Router>
-      </div>
+      </Suspense>
     )
   }
 }

@@ -89,6 +89,16 @@ function connect() {
   ws.addEventListener('message', (e) => {
     let msg = JSON.parse(e.data), { type } = msg
     log('Received:', msg)
+
+    switch (type) {
+      case 'new-ice-candidate':
+        // handleNewICECandidateMsg(msg)
+        console.log('handleNewICECandidateMsg(msg)')
+        break;
+    
+      default:
+        log_error({ error: msg, text: 'Unknown message received:' })
+    }
   })
 }
 

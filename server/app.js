@@ -12,6 +12,10 @@ const cookieParser = require('cookie-parser')
 
 mongoose.connect(config.get('mongoID'), { useNewUrlParser: true, useUnifiedTopology: true })
 
+/* create server for WebSocket */ 
+const http = require('http')
+const server = http.createServer(app)
+
 const cors = require('cors')
 app.use(cors())
 
@@ -42,10 +46,12 @@ function authValidation(req, res, next) {
         })
     }
     else {
+        server.user = req.user
         next()
     }
 }
 
+app.use(authValidation)
 app.use('/auth', require('./routes/auth-routes'))
 
 if(process.env.NODE_ENV === 'production') {
@@ -53,10 +59,6 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 app.use('/*', (req, res) => res.redirect('/'))
-
-/* create server for WebSocket */ 
-const http = require('http')
-const server = http.createServer(app)
 server.listen(config.get('port'))
 
 /* connect WebSocket */ 

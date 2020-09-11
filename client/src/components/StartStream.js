@@ -88,18 +88,31 @@ function connect() {
 
   ws.addEventListener('message', (e) => {
     let msg = JSON.parse(e.data), { type } = msg
-    log('Received:', msg)
 
     switch (type) {
       case 'new-ice-candidate':
-        // handleNewICECandidateMsg(msg)
-        console.log('handleNewICECandidateMsg(msg)')
+        handleNewICECandidateMsg(msg)
         break;
-    
+      
+      case 'message': 
+        log('Received:', msg)
+        break;
+      
       default:
         log_error({ error: msg, text: 'Unknown message received:' })
     }
   })
+}
+
+async function handleNewICECandidateMsg(msg) {
+  // Create new ICE candidate.
+  let candidate = new RTCIceCandidate(msg.candidate)
+
+  try {
+    await currentPeerConnection.addIceCandidate(candidate)
+  } catch (error) {
+    log_error({ error, text: 'Problem with new ICE candidate'})
+  }
 }
 
 async function createPeerConnection() {

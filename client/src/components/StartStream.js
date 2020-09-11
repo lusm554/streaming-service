@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { log, log_error } from '../log_info';
 
 class StartStream extends Component {
   constructor() {
@@ -36,25 +37,6 @@ const displayMediaOptions = {
     noiseSuppression: true,
     sampleRate: 44100
   }
-}
-
-// Outputting information to the console.
-
-function log(...text) {
-  let time = new Date()
-  console.log(`[${time.toLocaleTimeString()}]`, ...text)
-}
-
-// Outputting error message to the console.
-
-function log_error(errObj) {
-  let time = new Date()
-  let { error, text } = errObj
-
-  // Checking text for an array.
-  Array.isArray(text) ? 
-    console.error(`[${time.toLocaleTimeString()}]`, ...text, error) :
-    console.error(`[${time.toLocaleTimeString()}]`, text, error)
 }
 
 // Send an object by converting it to JSON and sending 

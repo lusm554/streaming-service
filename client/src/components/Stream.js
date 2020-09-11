@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { log, log_error } from '../log_info'
 
-let ref = null
-
 class Stream extends Component {
     constructor(props) {
         super(props) 
@@ -13,7 +11,7 @@ class Stream extends Component {
         return (
             <div>
                 <video ref={this.streamRef} autoPlay playsInline className="streamVideo" id="video"></video>
-                <button className="play_button" onClick={() => addVideo(this.streamRef)}>Play</button>
+                <button className="play_button" onClick={() => addVideo(this.streamRef.current)}>Play</button>
             </div>
         )
     }
@@ -21,7 +19,6 @@ class Stream extends Component {
 
 let ws = null 
 let currentPeerConnection = null
-let remoteSteam = null
 let stream = null
 
 connect()

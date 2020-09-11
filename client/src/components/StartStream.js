@@ -185,12 +185,10 @@ async function startStream(videoRef) {
     alert('You cannot start stream because you already have one open')
     return;
   }
-  else {
-    // Call createPeerConnection() to create the RTCPeerConnection.
+  // Call createPeerConnection() to create the RTCPeerConnection.
 
-    log('Creating peer connection...')
-    createPeerConnection()
-  }
+  log('Creating peer connection...')
+  createPeerConnection()
 
   try {
     log('Getting media stream...')

@@ -38,20 +38,14 @@ app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
 
-function authValidation(req, res, next) {
-    if(!req.user) {
-        res.json({
-            authenticated: false,
-            message: "user has not been authenticated"
-        })
-    }
-    else {
+function setUserData(req, res, next) {
+    if(req.user) {
         server.user = req.user
-        next()
     }
+    next()
 }
 
-app.use(authValidation)
+app.use(setUserData)
 app.use('/auth', require('./routes/auth-routes'))
 
 if(process.env.NODE_ENV === 'production') {

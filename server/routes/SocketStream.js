@@ -10,6 +10,7 @@ wss.on('connection', function connection(ws) {
         let msg = JSON.parse(json_message)
 
         switch (msg.type) {
+            case 'video-answer':
             case 'video-offer':
             case 'new-ice-candidate':
                 sendStream(ws, json_message)

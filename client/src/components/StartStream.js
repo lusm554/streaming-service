@@ -69,10 +69,22 @@ function connect() {
         log('Received:', msg)
         break;
       
+      case 'video-answer': 
+        handleVideoAnswerMsg(msg)
+        break;
+
       default:
         log_error({ error: msg, text: 'Unknown message received:' })
     }
   })
+}
+
+async function handleVideoAnswerMsg(msg) {
+  log('Handler video-answer') 
+
+  let desc = new RTCSessionDescription(msg.sdp)
+  await currentPeerConnection.setRemoteDescription(desc)
+    .catch( error => log_error({ error, text: 'handle video answer' }))
 }
 
 async function handleNewICECandidateMsg(msg) {
@@ -95,6 +107,7 @@ function createPeerConnection() {
   // Set up event handlers for the ICE negotiation process.
   currentPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent
   currentPeerConnection.onicecandidate = handleICECandidateEvent
+  currentPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent
 }
 
 async function handleNegotiationNeededEvent() {
